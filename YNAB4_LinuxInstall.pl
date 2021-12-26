@@ -169,11 +169,11 @@ if ($INSTALL_MODE eq 'DOWNLOAD') {
         # If LWP::Simple, wget, and curl are all NOT installed, I don't know how
         # else we could try to download the file, ask the user to download it
         # on their own and come back to us.
-        mydie "It looks like you don't have anything installed
-               that we can use to download the latest version of YNAB4.
-               Please download the Windows installer from here:\n\n
-               https://www.youneedabudget.com/download\n\n
-               and then try running this script with Option 1.\n";
+        mydie "It looks like you don't have anything installed\n".
+               "that we can use to download the latest version of YNAB4.\n".
+               "Please download the Windows installer from here:\n\n".
+               "https://www.youneedabudget.com/download\n\n".
+               "and then try running this script with Option 1.\n";
       }
     }
   }
