@@ -126,8 +126,10 @@ if ($INSTALL_MODE eq 'DOWNLOAD') {
   print "\nDownloading the most current version of YNAB4...\n";
   # Setting some variables to use through the various download options
   my $DOWNLOAD_LOCATION = "/tmp/ynab4_installer.exe";
-  my $UPDATE_PAGE = "http://www.youneedabudget.com/dev/ynab4/liveCaptive/Win/update.xml";
-  my $UPDATE_LOCATION = "/tmp/ynab4_update.xml";
+  # Since there are no new versions of YNAB4, hardcode the latest version details
+  my $CURRENT_VERSION = "4.3.857";
+  my $INSTALLER_URL = "https://www-assets.youneedabudget.com/ynab4/YNAB+4_4.3.857_Setup.exe";
+  my $GIVEN_MD5 = "A25C0A73350A99559F1E30C2F86AD0B9";
 
   # Check to see if the LWP::Simple perl module is installed
   eval("use LWP::Simple;");
@@ -135,14 +137,9 @@ if ($INSTALL_MODE eq 'DOWNLOAD') {
     # If LWP::Simple is not installed, let's try wget
     my $WGET = '/usr/bin/wget';
     if (-x $WGET) {
-      # If wget is installed, let's download the update page,
-      system($WGET, '-O', $UPDATE_LOCATION, $UPDATE_PAGE);
-      my $UPDATE_DATA = &save_file_data($UPDATE_LOCATION);
-      # look through the xml to find the download url and md5sum,
-      my ($CURRENT_VERSION, $INSTALLER_URL, $GIVEN_MD5) = &find_version_url_and_md5($UPDATE_DATA, $DOWNLOAD_LOCATION);
       # quit if the current version is the same as the installed version
       mydie "It looks like you already have the latest version of YNAB4 installed: $CURRENT_VERSION" unless &compare_versions($CURRENT_VERSION);
-      # download the installer,
+      # If wget is installed, let's download the installer,
       system($WGET, '-O', $DOWNLOAD_LOCATION, $INSTALLER_URL);
       # and check to make sure that the file we downloaded matches the md5 that YNAB gave us
       &validate_download($GIVEN_MD5, $DOWNLOAD_LOCATION);
@@ -152,14 +149,9 @@ if ($INSTALL_MODE eq 'DOWNLOAD') {
       # If wget is not installed, let's try curl
       my $CURL = '/usr/bin/curl';
       if (-x $CURL) {
-        # If curl is installed, let's download the update page,
-        system($CURL, '-o', $UPDATE_LOCATION, $UPDATE_PAGE);
-        my $UPDATE_DATA = &save_file_data($UPDATE_LOCATION);
-        # look through the xml to find the download url and md5sum,
-        my ($CURRENT_VERSION, $INSTALLER_URL, $GIVEN_MD5) = &find_version_url_and_md5($UPDATE_DATA, $DOWNLOAD_LOCATION);
         # quit if the current version is the same as the installed version
         mydie "It looks like you already have the latest version of YNAB4 installed: $CURRENT_VERSION" unless &compare_versions($CURRENT_VERSION);
-        # download the installer,
+        # If curl is installed, let's download the installer,
         system($CURL, '-o', $DOWNLOAD_LOCATION, $INSTALLER_URL);
         # and check to make sure that the file we downloaded matches the md5 that YNAB gave us
         &validate_download($GIVEN_MD5, $DOWNLOAD_LOCATION);
@@ -169,23 +161,19 @@ if ($INSTALL_MODE eq 'DOWNLOAD') {
         # If LWP::Simple, wget, and curl are all NOT installed, I don't know how
         # else we could try to download the file, ask the user to download it
         # on their own and come back to us.
-        mydie "It looks like you don't have anything installed
-               that we can use to download the latest version of YNAB4.
-               Please download the Windows installer from here:\n\n
-               https://www.youneedabudget.com/download\n\n
-               and then try running this script with Option 1.\n";
+        mydie "It looks like you don't have anything installed\n".
+               "that we can use to download the latest version of YNAB4.\n".
+               "Please download the Windows installer from here:\n\n".
+               "https://www.youneedabudget.com/ynab-classic-help/\n\n".
+               "and then try running this script with Option 1.\n";
       }
     }
   }
 
   else {
-    # LWP::Simple is installed, let's download the update page,
-    my $UPDATE_DATA = get($UPDATE_PAGE);
-    # look through the xml to find the download url and md5sum,
-    my ($CURRENT_VERSION, $INSTALLER_URL, $GIVEN_MD5) = &find_version_url_and_md5($UPDATE_DATA, $DOWNLOAD_LOCATION);
     # quit if the current version is the same as the installed version
     mydie "It looks like you already have the latest version of YNAB4 installed: $CURRENT_VERSION" unless &compare_versions($CURRENT_VERSION);
-    # download the installer,
+    # LWP::Simple is installed, let's download the installer,
     getstore($INSTALLER_URL, $DOWNLOAD_LOCATION);
     # and check to make sure that the file we downloaded matches the md5 that YNAB gave us
     &validate_download($GIVEN_MD5, $DOWNLOAD_LOCATION);
