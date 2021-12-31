@@ -142,8 +142,6 @@ if ($INSTALL_MODE eq 'DOWNLOAD') {
     if (-x $WGET) {
       # If wget is installed, let's download the installer,
       system($WGET, '-O', $DOWNLOAD_LOCATION, $INSTALLER_URL);
-      # and check to make sure that the file we downloaded matches the md5 that YNAB gave us
-      &validate_download($GIVEN_MD5, $DOWNLOAD_LOCATION);
     }
 
     else {
@@ -152,8 +150,6 @@ if ($INSTALL_MODE eq 'DOWNLOAD') {
       if (-x $CURL) {
         # If curl is installed, let's download the installer,
         system($CURL, '-o', $DOWNLOAD_LOCATION, $INSTALLER_URL);
-        # and check to make sure that the file we downloaded matches the md5 that YNAB gave us
-        &validate_download($GIVEN_MD5, $DOWNLOAD_LOCATION);
       }
 
       else {
@@ -172,9 +168,9 @@ if ($INSTALL_MODE eq 'DOWNLOAD') {
   else {
     # LWP::Simple is installed, let's download the installer,
     getstore($INSTALLER_URL, $DOWNLOAD_LOCATION);
-    # and check to make sure that the file we downloaded matches the md5 that YNAB gave us
-    &validate_download($GIVEN_MD5, $DOWNLOAD_LOCATION);
   }
+# and check to make sure that the file we downloaded matches the md5 that YNAB gave us
+&validate_download($GIVEN_MD5, $DOWNLOAD_LOCATION);
 }
 
 # Get started by opening the dropbox configuration
