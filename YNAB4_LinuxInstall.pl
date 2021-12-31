@@ -131,14 +131,15 @@ if ($INSTALL_MODE eq 'DOWNLOAD') {
   my $INSTALLER_URL = "https://www-assets.youneedabudget.com/ynab4/YNAB+4_4.3.857_Setup.exe";
   my $GIVEN_MD5 = "A25C0A73350A99559F1E30C2F86AD0B9";
 
+  # quit if the current version is the same as the installed version
+  mydie "It looks like you already have the latest version of YNAB4 installed: $CURRENT_VERSION" unless &compare_versions($CURRENT_VERSION);
+
   # Check to see if the LWP::Simple perl module is installed
   eval("use LWP::Simple;");
   if ($@) {
     # If LWP::Simple is not installed, let's try wget
     my $WGET = '/usr/bin/wget';
     if (-x $WGET) {
-      # quit if the current version is the same as the installed version
-      mydie "It looks like you already have the latest version of YNAB4 installed: $CURRENT_VERSION" unless &compare_versions($CURRENT_VERSION);
       # If wget is installed, let's download the installer,
       system($WGET, '-O', $DOWNLOAD_LOCATION, $INSTALLER_URL);
       # and check to make sure that the file we downloaded matches the md5 that YNAB gave us
@@ -149,8 +150,6 @@ if ($INSTALL_MODE eq 'DOWNLOAD') {
       # If wget is not installed, let's try curl
       my $CURL = '/usr/bin/curl';
       if (-x $CURL) {
-        # quit if the current version is the same as the installed version
-        mydie "It looks like you already have the latest version of YNAB4 installed: $CURRENT_VERSION" unless &compare_versions($CURRENT_VERSION);
         # If curl is installed, let's download the installer,
         system($CURL, '-o', $DOWNLOAD_LOCATION, $INSTALLER_URL);
         # and check to make sure that the file we downloaded matches the md5 that YNAB gave us
@@ -171,8 +170,6 @@ if ($INSTALL_MODE eq 'DOWNLOAD') {
   }
 
   else {
-    # quit if the current version is the same as the installed version
-    mydie "It looks like you already have the latest version of YNAB4 installed: $CURRENT_VERSION" unless &compare_versions($CURRENT_VERSION);
     # LWP::Simple is installed, let's download the installer,
     getstore($INSTALLER_URL, $DOWNLOAD_LOCATION);
     # and check to make sure that the file we downloaded matches the md5 that YNAB gave us
