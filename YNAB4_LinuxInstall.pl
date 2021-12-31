@@ -172,7 +172,7 @@ if ($INSTALL_MODE eq 'DOWNLOAD') {
         mydie "It looks like you don't have anything installed\n".
                "that we can use to download the latest version of YNAB4.\n".
                "Please download the Windows installer from here:\n\n".
-               "https://www.youneedabudget.com/download\n\n".
+               "https://www.youneedabudget.com/ynab-classic-help/\n\n".
                "and then try running this script with Option 1.\n";
       }
     }
