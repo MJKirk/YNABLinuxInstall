@@ -380,22 +380,6 @@ sub save_file_data ($) {
   return $UPDATE_DATA;
 }
 
-sub find_version_url_and_md5 ($\@) {
-  # Get the update information and name of the download file
-  my ($DATA, $FILE_LOCATION) = @_;
-  $DATA =~ /<version>(.*)<\/version>/g;
-  # Find the current version number
-  my $VERSION = $1;
-  $DATA =~ /<url>(.*)<\/url>/g;
-  # Find the installer URL
-  my $URL = $1;
-  $DATA =~ /<md5>(.*)<\/md5>/g;
-  # Find the MD5 and store it
-  my $MD5SUM = $1;
-  # Return both
-  return ($VERSION, $URL, $MD5SUM);
-}
-
 sub validate_download ($\@) {
   eval("use Digest::MD5 qw( md5_hex )");
   mydie "Validating the downloaded installer requires the Perl Digest::MD5 module to work, which you seem to be missing: $@\n" if $@;
